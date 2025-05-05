@@ -15,9 +15,9 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
 import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+#smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
 #st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+#sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
 # Text input for the custom smoothie name
 name_on_order = st.text_input('Name on Smoothie:')
@@ -28,14 +28,19 @@ st.write('The name on your Smoothie will be:', name_on_order)
 ingredients_list = st.multiselect(
     "Choose up to 5 ingredients:",
     my_dataframe )
+
 #.to_pandas()["FRUIT_NAME"].tolist(), max_selection = 5
 
 if ingredients_list:
+    ingredients_string = ''
     
-  ingredients_string = ''
+    for fruit_chosen in ingredients_list:
+        ingredients_string += fruit_chosen + ' '
     
-  for fruit_chosen in ingredients_list:
-       ingredients_string += fruit_chosen + ' '
+    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+    sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+
+
   #st.write(ingredients_string)
 
 
