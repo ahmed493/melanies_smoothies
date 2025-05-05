@@ -11,7 +11,21 @@ st.write(
 )
 cnx = st.connection("snowflake")
 session = cnx.session()
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('search_on'))
+
+for fruit_chosen in ingredients_list:
+    # Get the actual search term from the Snowflake table
+    search_value = my_dataframe.filter(col('FRUIT_NAME') == fruit_chosen).to_pandas().iloc[0]['SEARCH_ON']
+
+    # Show the subheader
+    st.subheader(fruit_chosen + ' Nutrition Information')
+
+    # API call
+    smoothie_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_value}")
+
+    # Display the result
+    st.dataframe(data=smoothie_response.json(), use_container_width=True)
+
 #st.dataframe(data=my_dataframe, use_container_width=True)
 
 import requests
